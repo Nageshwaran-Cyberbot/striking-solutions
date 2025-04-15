@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ArrowUp } from "lucide-react";
+import { Menu, X, ArrowUp, Instagram, Video, Image } from "lucide-react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,6 +16,8 @@ export default function Navbar() {
     { name: "Events", path: "/events" },
     { name: "Models", path: "/models" },
     { name: "Products", path: "/products" },
+    { name: "Instagram", path: "/instagram" },
+    { name: "3D Gallery", path: "/gallery" },
     { name: "Blog", path: "/blog" },
     { name: "Contact", path: "/contact" },
   ];
@@ -45,11 +47,14 @@ export default function Navbar() {
     });
   };
 
+  // Check if we're on a specific page rather than the home page section
+  const isStandalonePage = location.pathname !== "/";
+
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrollPosition > 50
+          scrollPosition > 50 || isStandalonePage
             ? "neo-blur py-3 backdrop-blur-xl"
             : "bg-transparent py-6"
         }`}
@@ -67,12 +72,12 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-1 items-center">
+            <nav className="hidden md:flex items-center space-x-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`relative px-4 py-2 font-medium transition-all duration-300 rounded-lg hover:text-primary ${
+                  className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:text-primary ${
                     location.pathname === link.path
                       ? "text-primary"
                       : "text-foreground"
@@ -112,12 +117,12 @@ export default function Navbar() {
         <div
           className="fixed inset-0 z-40 neo-blur flex flex-col items-center justify-center transform transition-all duration-300 ease-in-out"
         >
-          <nav className="flex flex-col items-center space-y-6 p-8">
+          <nav className="flex flex-col items-center space-y-4 p-8">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-xl font-medium ${
+                className={`text-lg font-medium ${
                   location.pathname === link.path
                     ? "text-primary"
                     : "text-foreground"
