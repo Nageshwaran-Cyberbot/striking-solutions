@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { EventsBackground } from "@/components/events/EventsBackground";
 import { useState, useRef, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Video, Image as ImageIcon, Cube, ArrowLeft, ArrowRight } from "lucide-react";
+import { Video, Image as ImageIcon, Box, ArrowLeft, ArrowRight } from "lucide-react";
 
 const GalleryPage = () => {
   const [activeTab, setActiveTab] = useState("3d");
@@ -80,7 +80,7 @@ const GalleryPage = () => {
             >
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="3d" className="flex items-center gap-2">
-                  <Cube className="w-4 h-4" />
+                  <Box className="w-4 h-4" />
                   <span>3D Models</span>
                 </TabsTrigger>
                 <TabsTrigger value="videos" className="flex items-center gap-2">
@@ -129,7 +129,7 @@ const GalleryPage = () => {
                       {item.type === '3d' && (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <button className="bg-white/10 backdrop-blur-sm rounded-full p-4 text-white hover:bg-brand transition-all duration-300">
-                            <Cube className="w-8 h-8" />
+                            <Box className="w-8 h-8" />
                           </button>
                         </div>
                       )}
@@ -200,7 +200,7 @@ const GalleryPage = () => {
                     )}
                     {item.type === '3d' && (
                       <div className="bg-blue-500 rounded-full p-2">
-                        <Cube className="w-4 h-4 text-white" />
+                        <Box className="w-4 h-4 text-white" />
                       </div>
                     )}
                     {item.type === 'image' && (
