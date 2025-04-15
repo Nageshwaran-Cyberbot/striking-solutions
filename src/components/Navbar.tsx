@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ArrowUp, Instagram, Video, Image } from "lucide-react";
@@ -9,17 +8,31 @@ export default function Navbar() {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const location = useLocation();
 
+  const scrollToSection = (sectionId: string) => {
+    // If we're not on the home page, navigate to home first
+    if (location.pathname !== "/") {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+      setIsMenuOpen(false);
+    }
+  };
+
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Services", path: "/services" },
-    { name: "Events", path: "/events" },
-    { name: "Models", path: "/models" },
-    { name: "Products", path: "/products" },
+    { name: "Home", path: "/", section: "hero" },
+    { name: "About", path: "/about", section: "about" },
+    { name: "Services", path: "/services", section: "services" },
+    { name: "Events", path: "/events", section: "events" },
+    { name: "Models", path: "/models", section: "modeling" },
+    { name: "Products", path: "/products", section: "products" },
     { name: "Instagram", path: "/instagram" },
     { name: "3D Gallery", path: "/gallery" },
     { name: "Blog", path: "/blog" },
-    { name: "Contact", path: "/contact" },
+    { name: "Contact", path: "/contact", section: "contact" }
   ];
 
   useEffect(() => {
@@ -35,11 +48,6 @@ export default function Navbar() {
     };
   }, []);
 
-  // Close menu when route changes
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location]);
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -49,6 +57,11 @@ export default function Navbar() {
 
   // Check if we're on a specific page rather than the home page section
   const isStandalonePage = location.pathname !== "/";
+
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]);
 
   return (
     <>
@@ -74,9 +87,9 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
               {navLinks.map((link) => (
-                <Link
+                <button
                   key={link.path}
-                  to={link.path}
+                  onClick={() => link.section ? scrollToSection(link.section) : null}
                   className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:text-primary ${
                     location.pathname === link.path
                       ? "text-primary"
@@ -89,7 +102,7 @@ export default function Navbar() {
                       className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded opacity-100 transition-opacity duration-300"
                     />
                   )}
-                </Link>
+                </button>
               ))}
               <Link to="/contact" className="ml-2">
                 <button className="cta-button">Get a Quote</button>
@@ -114,14 +127,12 @@ export default function Navbar() {
 
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div
-          className="fixed inset-0 z-40 neo-blur flex flex-col items-center justify-center transform transition-all duration-300 ease-in-out"
-        >
+        <div className="fixed inset-0 z-40 neo-blur flex flex-col items-center justify-center transform transition-all duration-300 ease-in-out">
           <nav className="flex flex-col items-center space-y-4 p-8">
             {navLinks.map((link) => (
-              <Link
+              <button
                 key={link.path}
-                to={link.path}
+                onClick={() => link.section ? scrollToSection(link.section) : null}
                 className={`text-lg font-medium ${
                   location.pathname === link.path
                     ? "text-primary"
@@ -129,7 +140,7 @@ export default function Navbar() {
                 }`}
               >
                 {link.name}
-              </Link>
+              </button>
             ))}
             <Link to="/contact" className="mt-4">
               <button className="cta-button">Get a Quote</button>
