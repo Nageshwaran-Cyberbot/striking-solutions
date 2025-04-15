@@ -1,6 +1,7 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Calendar, MapPin, Clock, ArrowLeft, ArrowRight } from 'lucide-react';
+import { EventsBackground } from './events/EventsBackground';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 
 // Event type interface
 interface Event {
@@ -82,6 +83,7 @@ export function EventsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const slidesContainerRef = useRef<HTMLDivElement>(null);
+  const productRefs = useRef<(HTMLDivElement | null)[]>([]);
   
   // Function to handle carousel navigation
   const navigateCarousel = (direction: 'next' | 'prev') => {
@@ -101,47 +103,32 @@ export function EventsSection() {
     }, 500);
   };
   
-  // Floating particles animation
-  useEffect(() => {
-    const container = document.getElementById('events-particles');
-    if (!container) return;
+  // Enhanced 3D card effect
+  const handleCardMovement = (e: React.MouseEvent<HTMLDivElement>, cardRef: HTMLDivElement) => {
+    if (!cardRef) return;
     
-    // Create particles
-    for (let i = 0; i < 30; i++) {
-      const particle = document.createElement('div');
-      
-      // Random properties
-      const size = Math.random() * 10 + 5;
-      const posX = Math.random() * 100;
-      const posY = Math.random() * 100;
-      const opacity = Math.random() * 0.5 + 0.1;
-      const animDuration = Math.random() * 20 + 10;
-      const animDelay = Math.random() * 5;
-      
-      // Apply styles
-      particle.style.position = 'absolute';
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      particle.style.borderRadius = '50%';
-      particle.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-      particle.style.left = `${posX}%`;
-      particle.style.top = `${posY}%`;
-      particle.style.opacity = `${opacity}`;
-      particle.style.animation = `float ${animDuration}s linear infinite`;
-      particle.style.animationDelay = `${animDelay}s`;
-      
-      container.appendChild(particle);
-    }
+    const rect = cardRef.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const mouseX = e.clientX - centerX;
+    const mouseY = e.clientY - centerY;
     
-    return () => {
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
-      }
-    };
-  }, []);
+    const rotateX = (mouseY / (rect.height / 2)) * -10;
+    const rotateY = (mouseX / (rect.width / 2)) * 10;
+    
+    cardRef.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  };
+
+  const resetCardPosition = (cardRef: HTMLDivElement) => {
+    if (!cardRef) return;
+    cardRef.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+  };
 
   return (
     <section id="events" className="section-padding relative overflow-hidden">
+      {/* Add 3D animated background */}
+      <EventsBackground />
+      
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-dark via-black to-brand-darkgray -z-10"></div>
       
@@ -158,7 +145,7 @@ export function EventsSection() {
           </p>
         </div>
         
-        {/* Events carousel */}
+        {/* Events carousel with enhanced 3D effects */}
         <div className="relative glass-card overflow-hidden rounded-2xl">
           {/* Carousel navigation buttons */}
           <button 
@@ -177,7 +164,6 @@ export function EventsSection() {
             <ArrowRight size={20} />
           </button>
           
-          {/* Carousel content */}
           <div 
             ref={slidesContainerRef}
             className="transition-transform duration-500 ease-in-out"
@@ -185,9 +171,17 @@ export function EventsSection() {
           >
             <div className="flex">
               {events.map((event, index) => (
-                <div 
+                <motion.div 
                   key={event.id} 
                   className="w-full flex-shrink-0 flex flex-col md:flex-row"
+                  ref={(el) => {
+                    if (el) productRefs.current[index] = el;
+                  }}
+                  onMouseMove={(e) => handleCardMovement(e, productRefs.current[index]!)}
+                  onMouseLeave={() => resetCardPosition(productRefs.current[index]!)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   {/* Event image */}
                   <div className="md:w-1/2 h-60 md:h-auto relative">
@@ -231,7 +225,7 @@ export function EventsSection() {
                       Learn More
                     </button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -251,20 +245,23 @@ export function EventsSection() {
           </div>
         </div>
         
-        {/* Timeline view (optional) */}
+        {/* Timeline view with 3D effects */}
         <div className="mt-20">
+          {/* Timeline header */}
           <h3 className="text-2xl font-bold text-center mb-10 text-white">Event Timeline</h3>
           
           <div className="relative">
-            {/* Timeline center line */}
             <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-brand/30 transform -translate-x-1/2"></div>
             
-            {/* Timeline events */}
             <div className="space-y-16">
               {events.map((event, index) => (
-                <div 
+                <motion.div 
                   key={event.id}
                   className={`relative flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center`}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
                 >
                   {/* Timeline node */}
                   <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-brand rounded-full z-10"></div>
@@ -280,7 +277,7 @@ export function EventsSection() {
                   
                   {/* Spacer for the other side */}
                   <div className="w-5/12"></div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
