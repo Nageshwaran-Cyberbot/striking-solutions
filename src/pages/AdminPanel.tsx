@@ -1,8 +1,13 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useBackground } from "@/contexts/BackgroundContext";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { EventsBackground } from "@/components/events/EventsBackground";
+import { UserManagement } from "@/components/admin/UserManagement";
+import { BackgroundSettings } from "@/components/admin/BackgroundSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +23,7 @@ import {
 
 const AdminPanel = () => {
   const { isAuthenticated, isAdmin } = useAuth();
+  const { backgroundSettings } = useBackground();
   const navigate = useNavigate();
   
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
@@ -39,8 +45,19 @@ const AdminPanel = () => {
   const [newInstaPost, setNewInstaPost] = useState({ caption: "", image: "" });
   
   useEffect(() => {
-    if (!isAuthenticated || !isAdmin) {
+    if (!isAuthenticated) {
       navigate("/signin");
+      return;
+    }
+    
+    if (!isAdmin) {
+      toast({
+        title: "Access denied",
+        description: "You need administrator privileges to access this page",
+        variant: "destructive",
+      });
+      navigate("/");
+      return;
     }
     
     setUploadedFiles(["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"]);
@@ -189,9 +206,17 @@ const AdminPanel = () => {
     });
   };
   
+  if (!isAuthenticated || !isAdmin) {
+    return null; // Will redirect in useEffect
+  }
+  
   return (
     <div className="flex flex-col min-h-screen bg-brand-dark text-white">
       <Navbar />
+      <EventsBackground 
+        type={backgroundSettings.type} 
+        mediaUrl={backgroundSettings.mediaUrl} 
+      />
       
       <main className="flex-grow pt-24 pb-12 px-4 md:px-6">
         <div className="container mx-auto">
@@ -309,15 +334,11 @@ const AdminPanel = () => {
             </TabsContent>
             
             <TabsContent value="users">
-              <Card className="bg-card/50 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle>Users Management</CardTitle>
-                  <CardDescription>Manage your platform users</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-400">User management interface would be implemented here.</p>
-                </CardContent>
-              </Card>
+              <UserManagement />
+            </TabsContent>
+            
+            <TabsContent value="settings">
+              <BackgroundSettings />
             </TabsContent>
             
             <TabsContent value="products">
@@ -461,6 +482,8 @@ const AdminPanel = () => {
                   </CardFooter>
                 </Card>
               </div>
+              
+              <BackgroundSettings />
             </TabsContent>
             
             <TabsContent value="blog">

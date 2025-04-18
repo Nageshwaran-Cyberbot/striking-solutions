@@ -1,20 +1,30 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { EventsBackground } from "@/components/events/EventsBackground";
+import { useBackground } from "@/contexts/BackgroundContext";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useToast } from "@/components/ui/use-toast";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { ADMIN_USER, ADMIN_PASSWORD, DEFAULT_USERS, DEFAULT_USER_PASSWORD } from "@/models/User";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
+  const { backgroundSettings } = useBackground();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  // Redirect if already logged in
+  if (isAuthenticated) {
+    navigate("/");
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +52,10 @@ const SignInPage = () => {
   return (
     <div className="flex flex-col min-h-screen bg-brand-dark text-white">
       <Navbar />
-      <EventsBackground />
+      <EventsBackground 
+        type={backgroundSettings.type} 
+        mediaUrl={backgroundSettings.mediaUrl} 
+      />
       
       <main className="flex flex-grow items-center justify-center py-24 px-4">
         <div className="w-full max-w-md space-y-8">
@@ -133,6 +146,18 @@ const SignInPage = () => {
                 </p>
               </div>
             </form>
+            
+            <div className="mt-6 pt-6 border-t border-white/10">
+              <p className="text-sm text-gray-400 mb-2">Demo credentials:</p>
+              <div className="space-y-2">
+                <div className="bg-white/5 p-2 rounded text-sm">
+                  <p><strong>Admin:</strong> {ADMIN_USER.email} / {ADMIN_PASSWORD}</p>
+                </div>
+                <div className="bg-white/5 p-2 rounded text-sm">
+                  <p><strong>User:</strong> {DEFAULT_USERS[0].email} / {DEFAULT_USER_PASSWORD}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>

@@ -1,10 +1,20 @@
-import { useRef, useEffect } from 'react';
+
+import { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 
-export const EventsBackground = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+interface BackgroundProps {
+  type?: 'particles' | 'image' | 'video';
+  mediaUrl?: string;
+}
 
+export const EventsBackground = ({ type = 'particles', mediaUrl }: BackgroundProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  
   useEffect(() => {
+    // If using image or video background, don't setup three.js
+    if (type === 'image' || type === 'video') return;
+    
     if (!containerRef.current) return;
 
     // Setup
@@ -80,19 +90,49 @@ export const EventsBackground = () => {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
-      containerRef.current?.removeChild(renderer.domElement);
+      if (containerRef.current?.contains(renderer.domElement)) {
+        containerRef.current.removeChild(renderer.domElement);
+      }
       scene.remove(particlesMesh);
       particlesGeometry.dispose();
       particlesMaterial.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [type]);
+
+  const handleVideoLoaded = () => {
+    setIsVideoLoaded(true);
+  };
 
   return (
     <div 
       ref={containerRef} 
       className="fixed inset-0 pointer-events-none"
       style={{ zIndex: -1 }}
-    />
+    >
+      {type === 'image' && mediaUrl && (
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+          style={{ 
+            backgroundImage: `url(${mediaUrl})`,
+            opacity: 0.6
+          }}
+        />
+      )}
+      
+      {type === 'video' && mediaUrl && (
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
+          onCanPlay={handleVideoLoaded}
+          style={{ opacity: isVideoLoaded ? 0.6 : 0 }}
+        >
+          <source src={mediaUrl} type="video/mp4" />
+        </video>
+      )}
+    </div>
   );
 };
