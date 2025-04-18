@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -6,14 +5,13 @@ import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, ShoppingBag, Calendar, Image, MessageCircle, Settings, FileText } from "lucide-react";
+import { Users, ShoppingBag, Calendar, Image, MessageCircle, Settings, FileText, Upload, Pencil, Trash2, Instagram } from "lucide-react";
 
 const AdminPanel = () => {
   const { isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
   
   useEffect(() => {
-    // Redirect if user is not authenticated or not an admin
     if (!isAuthenticated || !isAdmin) {
       navigate("/signin");
     }
@@ -48,19 +46,23 @@ const AdminPanel = () => {
                 <Calendar className="w-4 h-4" />
                 <span className="hidden md:inline">Events</span>
               </TabsTrigger>
+              
               <TabsTrigger value="media" className="flex items-center gap-2">
                 <Image className="w-4 h-4" />
                 <span className="hidden md:inline">Media</span>
               </TabsTrigger>
+              
               <TabsTrigger value="blog" className="flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 <span className="hidden md:inline">Blog</span>
               </TabsTrigger>
-              <TabsTrigger value="settings" className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                <span className="hidden md:inline">Settings</span>
+              
+              <TabsTrigger value="instagram" className="flex items-center gap-2">
+                <Instagram className="w-4 h-4" />
+                <span className="hidden md:inline">Instagram</span>
               </TabsTrigger>
             </TabsList>
+            
             
             <TabsContent value="overview" className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -174,11 +176,36 @@ const AdminPanel = () => {
             <TabsContent value="media">
               <Card className="bg-card/50 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle>Media Library</CardTitle>
-                  <CardDescription>Manage your media assets</CardDescription>
+                  <CardTitle>Media Management</CardTitle>
+                  <CardDescription>Upload and manage your media files</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-400">Media management interface would be implemented here.</p>
+                  <div className="space-y-4">
+                    <div className="p-4 border border-dashed border-gray-400 rounded-lg text-center">
+                      <input
+                        type="file"
+                        id="media-upload"
+                        className="hidden"
+                        accept="image/*,video/*"
+                        multiple
+                      />
+                      <label
+                        htmlFor="media-upload"
+                        className="cursor-pointer block p-4 text-gray-400 hover:text-white transition-colors"
+                      >
+                        <Upload className="w-8 h-8 mx-auto mb-2" />
+                        <p>Click to upload media files</p>
+                        <p className="text-sm text-gray-500">Supports images and videos</p>
+                      </label>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {/* This would be populated with your media files */}
+                      <div className="aspect-square bg-gray-800 rounded-lg"></div>
+                      <div className="aspect-square bg-gray-800 rounded-lg"></div>
+                      <div className="aspect-square bg-gray-800 rounded-lg"></div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -187,22 +214,62 @@ const AdminPanel = () => {
               <Card className="bg-card/50 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>Blog Management</CardTitle>
-                  <CardDescription>Manage your blog content</CardDescription>
+                  <CardDescription>Create and edit blog posts</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-400">Blog management interface would be implemented here.</p>
+                  <div className="space-y-4">
+                    <button className="w-full p-4 bg-brand hover:bg-brand/90 rounded-lg text-white font-medium">
+                      Create New Blog Post
+                    </button>
+                    
+                    <div className="space-y-4">
+                      {/* This would be populated with your blog posts */}
+                      <div className="p-4 bg-gray-800/50 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <h3 className="font-medium">Blog Post Title</h3>
+                          <div className="flex gap-2">
+                            <button className="p-2 hover:bg-gray-700 rounded">
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                            <button className="p-2 hover:bg-gray-700 rounded">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-400">Last edited: 2 days ago</p>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
             
-            <TabsContent value="settings">
+            <TabsContent value="instagram">
               <Card className="bg-card/50 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle>Platform Settings</CardTitle>
-                  <CardDescription>Configure your platform</CardDescription>
+                  <CardTitle>Instagram Feed Management</CardTitle>
+                  <CardDescription>Manage your Instagram content</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-400">Settings interface would be implemented here.</p>
+                  <div className="space-y-4">
+                    <button className="w-full p-4 bg-brand hover:bg-brand/90 rounded-lg text-white font-medium">
+                      Add New Instagram Post
+                    </button>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {/* This would be populated with your Instagram posts */}
+                      <div className="aspect-square bg-gray-800 rounded-lg relative group">
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <button className="p-2 bg-white/10 rounded-full hover:bg-white/20">
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button className="p-2 bg-white/10 rounded-full hover:bg-white/20">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
