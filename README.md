@@ -1,73 +1,68 @@
-# Welcome to your Lovable project
 
-## Project info
+# DigitalStrike Marketing Agency Website
 
-**URL**: https://lovable.dev/projects/0cbfa03d-e2d1-43a5-81bc-b52ccffa0d27
+## Admin Panel Guide
 
-## How can I edit this code?
+### Accessing the Admin Panel
 
-There are several ways of editing your application.
+1. Sign in with an admin account (any email containing "admin" will work for the demo)
+2. Navigate to the `/admin` route 
 
-**Use Lovable**
+### Managing Blog Content
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0cbfa03d-e2d1-43a5-81bc-b52ccffa0d27) and start prompting.
+The blog management section allows you to:
+- Create new blog posts with titles, content, and featured images
+- Edit existing blog posts
+- Publish or unpublish posts to control visibility
+- Delete unwanted posts
 
-Changes made via Lovable will be committed automatically to this repo.
+### Managing Instagram Feed
 
-**Use your preferred IDE**
+The Instagram feed management allows you to:
+- Add new Instagram posts with images and captions
+- Edit existing posts
+- Delete posts from your feed
+- View engagement metrics (demo only)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Media Management
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Upload and manage media assets:
+- Upload images and videos
+- Organize your media library
+- Use uploaded media in your blog posts and Instagram feed
+- Reference media files in your content
 
-Follow these steps:
+## Adding Custom Images and Videos
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Option 1: Using the Admin Panel
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. Go to the Admin Panel > Media tab
+2. Use the upload form to add images and videos
+3. Access uploaded files in the Media Library
+4. Reference them in your content using the provided URLs
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Option 2: Adding Files Directly to the Project
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+1. Add your images and videos to the public folder
+2. Reference them in your content using paths like `/your-image.jpg`
 
-**Edit a file directly in GitHub**
+## Customization Points
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Adding Social Media Links
 
-**Use GitHub Codespaces**
+Edit the Footer component to add or modify social media links.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Updating Contact Information
 
-## What technologies are used for this project?
+Edit the ContactSection component to update your business details.
 
-This project is built with .
+### Modifying Services
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Edit the ServicesSection component to change your service offerings.
 
-## How can I deploy this project?
+## Technical Notes
 
-Simply open [Lovable](https://lovable.dev/projects/0cbfa03d-e2d1-43a5-81bc-b52ccffa0d27) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- The website uses React with TypeScript
+- Styling is implemented with Tailwind CSS
+- UI components are from Shadcn UI library
+- For demonstration purposes, data is stored locally (in a production environment, connect to a database)
