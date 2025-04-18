@@ -1,5 +1,3 @@
-
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBackground } from "@/contexts/BackgroundContext";
@@ -8,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { EventsBackground } from "@/components/events/EventsBackground";
 import { UserManagement } from "@/components/admin/UserManagement";
 import { BackgroundSettings } from "@/components/admin/BackgroundSettings";
+import { BlogManagement } from "@/components/admin/BlogManagement";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ import {
   FileText, Upload, Pencil, Trash2, Instagram, Plus, Save, X, Video, 
   PlusCircle, FileImage, Youtube
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const AdminPanel = () => {
   const { isAuthenticated, isAdmin } = useAuth();
