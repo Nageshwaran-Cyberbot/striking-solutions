@@ -195,7 +195,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // CRUD operations for users
   const addUser = async (userData: Omit<User, 'id' | 'createdAt'>, password: string): Promise<User> => {
-    if (!isAdmin) {
+    if (!user?.isAdmin) {
       throw new Error("Unauthorized: Only admins can add users");
     }
     
@@ -229,7 +229,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updateUser = async (id: string, userData: Partial<User>): Promise<User | null> => {
     // Check if current user is admin or updating their own profile
-    if (!isAdmin && user?.id !== id) {
+    if (!user?.isAdmin && user?.id !== id) {
       throw new Error("Unauthorized: You can only update your own profile");
     }
     
@@ -266,7 +266,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const deleteUser = async (id: string): Promise<boolean> => {
-    if (!isAdmin) {
+    if (!user?.isAdmin) {
       throw new Error("Unauthorized: Only admins can delete users");
     }
     
@@ -301,8 +301,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const getAllUsers = (): User[] => {
-    return isAdmin ? [...users] : [];
+    return user?.isAdmin ? [...users] : [];
   };
+
+  const isAdmin = user?.isAdmin || false;
 
   return (
     <AuthContext.Provider
@@ -310,7 +312,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         users,
         isAuthenticated: !!user,
-        isAdmin: user?.isAdmin || false,
+        isAdmin,
         login,
         signup,
         logout,

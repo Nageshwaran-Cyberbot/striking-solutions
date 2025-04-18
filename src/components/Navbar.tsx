@@ -1,8 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { usePageScroll } from "@/hooks/usePageScroll";
-import { useMobile } from "@/hooks/use-mobile";
+import usePageScroll from "@/hooks/usePageScroll";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Menu, User, Settings, LogOut, UserPlus } from "lucide-react";
@@ -18,7 +18,7 @@ import {
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { isScrolled } = usePageScroll();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const location = useLocation();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
 

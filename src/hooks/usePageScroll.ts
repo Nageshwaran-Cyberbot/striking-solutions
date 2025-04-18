@@ -1,9 +1,23 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const usePageScroll = () => {
   const location = useLocation();
+  const [isScrolled, setIsScrolled] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   
   useEffect(() => {
     // Check for a scrollToId in the location state
@@ -23,6 +37,8 @@ const usePageScroll = () => {
       window.scrollTo(0, 0);
     }
   }, [location.pathname, location.state]);
+  
+  return { isScrolled };
 };
 
 export default usePageScroll;
