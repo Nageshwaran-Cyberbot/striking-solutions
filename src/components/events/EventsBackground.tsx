@@ -1,4 +1,3 @@
-
 import { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
@@ -16,22 +15,22 @@ export const EventsBackground = () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     containerRef.current.appendChild(renderer.domElement);
 
-    // Add particles
+    // Add particles with updated properties
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 2000;
+    const particlesCount = 2500; // Increased particle count
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 50;
+      posArray[i] = (Math.random() - 0.5) * 60; // Increased spread
     }
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
     const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.005,
-      color: '#9b87f5',
+      size: 0.007, // Slightly larger particles
+      color: '#a594f9', // Lighter purple color
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.9, // Increased opacity
       blending: THREE.AdditiveBlending
     });
 
@@ -56,8 +55,8 @@ export const EventsBackground = () => {
     const animate = () => {
       requestAnimationFrame(animate);
 
-      particlesMesh.rotation.x += 0.0001;
-      particlesMesh.rotation.y += 0.0001;
+      particlesMesh.rotation.x += 0.0002; // Slower rotation
+      particlesMesh.rotation.y += 0.0002;
 
       // Gentle mouse following
       particlesMesh.rotation.x += mouseY * 0.01;
